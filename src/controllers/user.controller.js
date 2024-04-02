@@ -3,7 +3,7 @@ import {ApiError} from "../utills/ApiError.js"
 import {User} from "../models/user.modle.js"
 import {uploadOnCloudinary} from "../utills/cloudinary.js"
 import { ApiResponse } from "../utills/ApiResponse.js";
-import { Jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import mongoose, { mongo } from "mongoose";
 
 const generateAccessAndRefereshToken  = async(userId) =>{
@@ -50,7 +50,7 @@ const registerUser = asyncHandler( async (req,res) => {
         throw new ApiError(400,"All fields are required")
     }
 
-    const existedUser =await User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ username },{ email }]
     })
 
@@ -80,6 +80,7 @@ const registerUser = asyncHandler( async (req,res) => {
         throw new ApiError(400,"Avatar File is Required")
     }
 
+    //create a document in mongoDB database of user file
     const user = await User.create({
         fullname,
         avatar:avatar.url,
